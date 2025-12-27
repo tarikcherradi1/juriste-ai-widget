@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
-const init = () => {
+const renderApp = () => {
   const rootElement = document.getElementById('root');
   if (rootElement) {
     const root = ReactDOM.createRoot(rootElement);
@@ -14,9 +14,8 @@ const init = () => {
   }
 };
 
-// On attend que le DOM soit prêt pour lancer React
 if (document.readyState === 'complete') {
-  init();
+  renderApp();
 } else {
-  window.addEventListener('load', init);
+  window.addEventListener('load', renderApp);
 }
