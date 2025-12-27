@@ -1,31 +1,26 @@
 import { GoogleGenAI, Modality } from "@google/genai";
-import { SYSTEM_INSTRUCTION, Mode, Attachment } from "./types.ts";
-
-// Initialisation unique du client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+import { SYSTEM_INSTRUCTION, Mode } from "./types.ts";
 
 export const generateLegalResponse = async (
   prompt: string,
   mode: Mode,
   chatHistory: any[],
-  attachments: Attachment[] = []
+  attachments: any[] = []
 ): Promise<{ text: string; sources?: string[] }> => {
   
-  // Choix du modèle selon la complexité
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
   const modelName = mode === Mode.DEEP ? 'gemini-3-pro-preview' : 'gemini-3-flash-preview';
   
   const config: any = {
     systemInstruction: SYSTEM_INSTRUCTION,
-    tools: [{ googleSearch: {} }] // Toujours activer la recherche pour le droit
+    tools: [{ googleSearch: {} }] 
   };
 
   if (mode === Mode.DEEP) {
     config.thinkingConfig = { thinkingBudget: 16000 };
   }
 
-  // Préparation des contenus (incluant les pièces jointes en tête)
   const currentParts: any[] = [];
-  
   attachments.forEach(att => {
     currentParts.push({
       inlineData: {
@@ -34,7 +29,6 @@ export const generateLegalResponse = async (
       }
     });
   });
-
   currentParts.push({ text: prompt });
 
   const contents = [
@@ -58,7 +52,7 @@ export const generateLegalResponse = async (
     }
 
     return { 
-      text: response.text || "Désolé, je n'ai pas pu générer de réponse.", 
+      text: response.text || "Désolé, aucune réponse générée.", 
       sources 
     };
   } catch (error) {
@@ -69,12 +63,12 @@ export const generateLegalResponse = async (
 
 export const speakText = async (text: string): Promise<AudioBuffer | null> => {
   try {
-    // Nettoyage rapide du markdown pour la voix
-    const cleanText = text.replace(/[#*`⚖️🏛️🔍💡]/g, '').slice(0, 1000);
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+    const cleanText = text.replace(/[#*`⚖️🏛️🔍💡]/g, '').slice(0, 800);
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
-      contents: [{ parts: [{ text: `Lis ceci avec une voix posée et professionnelle : ${cleanText}` }] }],
+      contents: [{ parts: [{ text: cleanText }] }],
       config: {
         responseModalities: [Modality.AUDIO],
         speechConfig: {
@@ -96,7 +90,6 @@ export const speakText = async (text: string): Promise<AudioBuffer | null> => {
   }
 };
 
-// Helpers Audio internes
 function decode(base64: string) {
   const binaryString = atob(base64);
   const len = binaryString.length;
