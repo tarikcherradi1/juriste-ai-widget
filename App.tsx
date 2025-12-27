@@ -53,13 +53,13 @@ export default function App() {
       });
 
     } catch (error) {
-      console.error(error);
+      console.error("Chat Error:", error);
       setMessages(prev => {
           const filtered = prev.filter(m => m.id !== 'thinking');
           return [...filtered, {
             id: (Date.now() + 1).toString(),
             role: Role.SYSTEM,
-            content: "Désolé, une erreur de connexion à l'IA s'est produite. Vérifiez votre clé API.",
+            content: "Erreur technique : Impossible de contacter l'IA. Vérifiez votre clé API.",
             timestamp: Date.now()
           }];
       });
@@ -79,29 +79,29 @@ export default function App() {
   };
 
   const clearChat = () => {
-    if (window.confirm("Effacer l'historique ?")) {
+    if (window.confirm("Effacer tout l'historique ?")) {
       setMessages([]);
     }
   };
 
   return (
     <div className="flex flex-col h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-sm">
+      <header className="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-sm z-10">
         <div className="flex items-center gap-2">
-           <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white">
+           <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white shadow-md">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
            </div>
            <div>
              <h1 className="text-sm font-bold text-slate-900 font-serif-legal">JuristeAI</h1>
-             <p className="text-[8px] uppercase tracking-widest text-amber-600 font-bold">Expert JurisprudencesPro</p>
+             <p className="text-[8px] uppercase tracking-widest text-amber-600 font-bold">Blog JurisprudencesPro</p>
            </div>
         </div>
-        <button onClick={clearChat} className="text-slate-400 hover:text-red-500 transition-colors">
+        <button onClick={clearChat} title="Nouvelle conversation" className="text-slate-400 hover:text-red-500 transition-colors p-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
         </button>
       </header>
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden relative">
         <MessageList messages={messages} isLiveActive={isLiveActive} />
         <InputArea 
           onSendMessage={handleSendMessage}
