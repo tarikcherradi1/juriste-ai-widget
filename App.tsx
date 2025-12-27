@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { generateLegalResponse } from './geminiService.ts';
 import { LiveSession } from './liveService.ts';
