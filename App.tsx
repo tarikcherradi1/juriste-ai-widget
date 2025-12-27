@@ -4,18 +4,18 @@ import { LiveSession } from './liveService.ts';
 import { MessageList } from './MessageList.tsx';
 import { InputArea } from './InputArea.tsx';
 import { Disclaimer } from './Disclaimer.tsx';
-import { Message, Role, Mode, Attachment } from './types.ts';
+import { Role, Mode } from './types.ts';
 
 export default function App() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [mode, setMode] = useState<Mode>(Mode.FAST);
+  const [messages, setMessages] = useState([]);
+  const [mode, setMode] = useState(Mode.FAST);
   const [isLoading, setIsLoading] = useState(false);
   const [isLiveActive, setIsLiveActive] = useState(false);
   
-  const liveSession = useRef<LiveSession | null>(null);
+  const liveSession = useRef(null);
 
-  const handleSendMessage = async (text: string, attachments: Attachment[]) => {
-    const userMsg: Message = {
+  const handleSendMessage = async (text, attachments) => {
+    const userMsg = {
       id: Date.now().toString(),
       role: Role.USER,
       content: text,
@@ -59,7 +59,7 @@ export default function App() {
           return [...filtered, {
             id: (Date.now() + 1).toString(),
             role: Role.SYSTEM,
-            content: "Erreur technique : Impossible de contacter l'IA. Vérifiez votre clé API.",
+            content: "Erreur technique : Impossible de contacter l'IA. Vérifiez votre clé API ou votre connexion.",
             timestamp: Date.now()
           }];
       });
@@ -70,8 +70,10 @@ export default function App() {
 
   const toggleLive = async () => {
     if (isLiveActive) {
-      await liveSession.current?.stop();
-      liveSession.current = null;
+      if (liveSession.current) {
+        await liveSession.current.stop();
+        liveSession.current = null;
+      }
     } else {
       liveSession.current = new LiveSession((status) => setIsLiveActive(status));
       await liveSession.current.start();
@@ -93,7 +95,7 @@ export default function App() {
            </div>
            <div>
              <h1 className="text-sm font-bold text-slate-900 font-serif-legal">JuristeAI</h1>
-             <p className="text-[8px] uppercase tracking-widest text-amber-600 font-bold">Blog JurisprudencesPro</p>
+             <p className="text-[8px] uppercase tracking-widest text-amber-600 font-bold">Expert Bilingue</p>
            </div>
         </div>
         <button onClick={clearChat} title="Nouvelle conversation" className="text-slate-400 hover:text-red-500 transition-colors p-2">
