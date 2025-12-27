@@ -13,11 +13,15 @@
       #root { height: 100%; width: 100%; }
       .font-arabic { font-family: 'Cairo', sans-serif; }
       .font-serif-legal { font-family: 'Playfair Display', serif; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .loader { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: #0f172a; border-radius: 50%; animation: spin 1s linear infinite; }
       @keyframes typing { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
       .typing-dot { width: 4px; height: 4px; background: #64748b; border-radius: 50%; animation: typing 1s infinite ease-in-out; }
+      .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+      .typing-dot:nth-child(3) { animation-delay: 0.4s; }
     </style>
     <script>
-      // Simulation de l'environnement pour le SDK Gemini et éviter les crashs immédiats
+      // Initialisation de l'environnement global
       window.process = { env: { API_KEY: "" } };
     </script>
     <script type="importmap">
@@ -26,7 +30,7 @@
     "react": "https://esm.sh/react@18.2.0",
     "react-dom": "https://esm.sh/react-dom@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "react-markdown": "https://esm.sh/react-markdown@8.0.7",
+    "react-markdown": "https://esm.sh/react-markdown@8.0.7?deps=react@18.2.0",
     "@google/genai": "https://esm.sh/@google/genai@1.30.0",
     "mammoth": "https://esm.sh/mammoth@1.6.0",
     "xlsx": "https://esm.sh/xlsx@0.18.5",
@@ -35,14 +39,13 @@
   }
 }
 </script>
-    <!-- Babel standalone pour transformer le JSX en temps réel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script>
-      // Configuration de Babel pour supporter le TypeScript et les modules ESM
+      // Configuration stricte de Babel pour React 18
       Babel.registerPreset("legal-preset", {
         presets: [
           [Babel.availablePresets["env"], { "modules": false }],
-          Babel.availablePresets["react"],
+          [Babel.availablePresets["react"], { "runtime": "classic" }],
           Babel.availablePresets["typescript"]
         ]
       });
@@ -50,24 +53,12 @@
   </head>
   <body>
     <div id="root">
-      <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; color:#64748b; font-family:sans-serif; gap: 1rem;">
-        <div style="width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: #0f172a; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <div id="loading-text">Initialisation de l'assistant juridique...</div>
+      <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; color:#64748b; gap: 1rem;">
+        <div class="loader"></div>
+        <div id="loading-text">Démarrage du système juridique...</div>
       </div>
     </div>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-
-    <!-- On charge index.tsx comme un script Babel simple (SANS type="module" pour éviter l'erreur MIME) -->
-    <script type="text/babel" data-presets="legal-preset" src="./index.tsx"></script>
-
-    <script>
-      // Petit script de secours si Babel échoue à charger le fichier
-      setTimeout(() => {
-        const root = document.getElementById('root');
-        if (root && root.innerText.includes("Initialisation")) {
-          console.warn("Le chargement semble lent ou bloqué. Vérification des ressources...");
-        }
-      }, 5000);
-    </script>
+    <!-- Utilisation du preset enregistré pour éviter les erreurs de transformation -->
+    <script type="text/babel" data-presets="legal-preset" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
