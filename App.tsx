@@ -1,11 +1,11 @@
 
 import React, { useState, useRef } from 'react';
-import { generateLegalResponse } from './services/geminiService';
-import { LiveSession } from './services/liveService';
-import { MessageList } from './components/MessageList';
-import { InputArea } from './components/InputArea';
-import { Disclaimer } from './components/Disclaimer';
-import { Message, Role, Mode, Attachment } from './types';
+import { generateLegalResponse } from './services/geminiService.ts';
+import { LiveSession } from './services/liveService.ts';
+import { MessageList } from './components/MessageList.tsx';
+import { InputArea } from './components/InputArea.tsx';
+import { Disclaimer } from './components/Disclaimer.tsx';
+import { Message, Role, Mode, Attachment } from './types.ts';
 
 export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
