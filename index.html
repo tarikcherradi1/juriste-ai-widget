@@ -20,16 +20,13 @@
       .typing-dot:nth-child(2) { animation-delay: 0.2s; }
       .typing-dot:nth-child(3) { animation-delay: 0.4s; }
     </style>
-    <script>
-      // Initialisation de l'environnement global
-      window.process = { env: { API_KEY: "" } };
-    </script>
     <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@18.2.0",
     "react-dom": "https://esm.sh/react-dom@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
     "react-markdown": "https://esm.sh/react-markdown@8.0.7?deps=react@18.2.0",
     "@google/genai": "https://esm.sh/@google/genai@1.30.0",
     "mammoth": "https://esm.sh/mammoth@1.6.0",
@@ -41,7 +38,6 @@
 </script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script>
-      // Configuration stricte de Babel pour React 18
       Babel.registerPreset("legal-preset", {
         presets: [
           [Babel.availablePresets["env"], { "modules": false }],
@@ -58,7 +54,6 @@
         <div id="loading-text">Démarrage du système juridique...</div>
       </div>
     </div>
-    <!-- Utilisation du preset enregistré pour éviter les erreurs de transformation -->
     <script type="text/babel" data-presets="legal-preset" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
