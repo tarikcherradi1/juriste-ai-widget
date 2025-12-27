@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-    <title>JuristeAI - Widget</title>
+    <title>JuristeAI - Assistant JurisprudencesPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,12 +12,11 @@
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-color: transparent; /* Permet au fond du blog de transparaître si besoin */
+        background-color: transparent;
       }
       .font-arabic { font-family: 'Cairo', sans-serif; }
       .font-serif-legal { font-family: 'Playfair Display', serif; }
       
-      /* Scrollbar élégante pour les petits widgets */
       ::-webkit-scrollbar { width: 5px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -32,6 +31,9 @@
       }
     </style>
     <script>
+      // Simulation de l'objet process pour éviter les crashs navigateurs
+      window.process = { env: { API_KEY: "" } };
+      
       tailwind.config = {
         theme: {
           extend: {
@@ -59,5 +61,7 @@
   </head>
   <body class="h-screen overflow-hidden bg-slate-50">
     <div id="root" class="h-full"></div>
+    <!-- LE POINT D'ENTRÉE MANQUANT -->
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
